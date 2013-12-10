@@ -17,11 +17,15 @@ class verifycode extends Control
         $this->lurd->appName = "验证码管理";
         $this->lurd->isDebug = FALSE;  //开启调试模式后每次都会生成模板
         $this->lurd->stringSafe = 2;  //默认1(只限制不安全的HTML[script、frame等]，0--为不限，2--为不支持HTML
-        $this->lurd->AddLinkTable($this->arclurd,'arcid','id','title');
+        //$this->lurd->AddLinkTable($this->arclurd,'arcid','id','title');
+
+        require_once DEDEASK.'/data/vcode.inc.php';
         //获取url
+        $this->style = 'admin';
         $this->currurl = GetCurUrl();
         //载入模型
-        //$this->answer = $this->Model('verifycode');
+        $this->verifymodel = $this->Model('verifymodel');
+        $this->archive = $this->Model('archive');
     }
 
     function ac_index()
@@ -58,5 +62,61 @@ class verifycode extends Control
         //获取数据
         $this->lurd->ListData('id', $wherequery, $orderquery);
         exit();
+    }
+
+    //增加分类
+    function ac_add()
+    {
+
+        $archives = $this->archive->get_archives();
+        $GLOBALS['archives'] = $archives;
+        $this->SetTemplate('verifycode_add.htm');
+        $this->Display();
+    }
+
+//增加分类
+    function ac_add_save()
+    {
+        $num = request('num', '');
+        $arcid = request('arcid', '');
+        if(!is_numeric($num))
+        {
+            ShowMsg('数量不正确', '?ct=asktype');
+            exit();
+        }
+        $codes = $this->verifymodel->create_code($num,$arcid);
+        $arc = $this->archive->get_archiveByid($arcid);
+        $rs = $this->verifymodel->save_add($arc,$codes);
+        if($rs)
+        {
+            ShowMsg('增加分类成功，将返回分类管理页面','?ct=verifycode');
+            exit();
+        }else{
+            ShowMsg('增加分类成功，将返回分类管理页面','?ct=verifycode');
+            exit();
+        }
+    }
+
+    //删除
+    function ac_del()
+    {
+        $id = request('id', '');
+        $ids = request('Id','');
+        if($id)
+        {
+            $rs = $this->verifymodel->del_vcode($id);
+        }
+        if(is_array($ids))
+        {
+            $rs = $this->verifymodel->del_vcode($ids);
+        }
+        if($rs)
+        {
+            ShowMsg('删除分类成功', '?ct=verifycode');
+            exit();
+        }else{
+            ShowMsg('删除分类失败','?ct=verifycode');
+            exit();
+        }
     }
 }
