@@ -22,7 +22,7 @@ if($cuserLogin->getUserID()==-1)
 	ShowMsg("需要是管理员登陆才能够访问",'index.php');
 	exit();
 }
-define('DEDEASK',dirname(__FILE__));
+define('DEDEVCODE',dirname(__FILE__));
 if($cfg_dede_log=='Y')
 {
 	$s_nologfile = '_main|_list';

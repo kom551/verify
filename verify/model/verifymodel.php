@@ -8,8 +8,7 @@ class verifymodel extends Model
     function verifymodel()
     {
         parent::__construct();
-        require_once DEDEASK.'/data/vcode.inc.php';
-        var_dump($this->typeid);
+        require_once DEDEVCODE.'/data/common.inc.php';
     }
 
     function get_verifycode($wheresql="",$orderby="ASC")
@@ -41,8 +40,8 @@ class verifymodel extends Model
                 $ctime = date('Y-m-d H:i:s',time());
                 foreach($codes as $code)
                 {
-                    $query = "INSERT INTO `#@__verifycode`(vcode, arcid, title, state, createtime)
-                      VALUES('{$code}','{$arcid}','{$title}',0,'{$ctime}');";
+                    $query = "INSERT INTO `#@__verifycode`(vcode, arcid, title, state)
+                      VALUES('{$code}','{$arcid}','{$title}',0);";
                     $this->dsql->ExecuteNoneQuery($query);
                 }
                 return TRUE;

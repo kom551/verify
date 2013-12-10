@@ -6,9 +6,9 @@
  * Time: 下午9:59
  */
 
-class verifycode extends Control
+class vcodeadmin extends Control
 {
-    function verifycode()
+    function vcodeadmin()
     {
         parent::__construct();
         $this->temp = DEDEAPPTPL.'/admin';
@@ -18,13 +18,13 @@ class verifycode extends Control
         $this->lurd->isDebug = FALSE;  //开启调试模式后每次都会生成模板
         $this->lurd->stringSafe = 2;  //默认1(只限制不安全的HTML[script、frame等]，0--为不限，2--为不支持HTML
         //$this->lurd->AddLinkTable($this->arclurd,'arcid','id','title');
-
-        require_once DEDEASK.'/data/vcode.inc.php';
+        require_once DEDEVCODE.'/data/common.inc.php';
         //获取url
         $this->style = 'admin';
         $this->currurl = GetCurUrl();
         //载入模型
         $this->verifymodel = $this->Model('verifymodel');
+
         $this->archive = $this->Model('archive');
     }
 
@@ -58,7 +58,7 @@ class verifycode extends Control
         //指定每页显示数
         $this->lurd->pageSize = 20;
         //指定某字段为强制定义的类型
-        $this->lurd->BindType('dateline', 'TIMESTAMP', 'Y-m-d H:i');
+        $this->lurd->BindType('gmt_create', 'TIMESTAMP', 'Y-m-d H:i');
         //获取数据
         $this->lurd->ListData('id', $wherequery, $orderquery);
         exit();
@@ -89,10 +89,10 @@ class verifycode extends Control
         $rs = $this->verifymodel->save_add($arc,$codes);
         if($rs)
         {
-            ShowMsg('增加分类成功，将返回分类管理页面','?ct=verifycode');
+            ShowMsg('增加分类成功，将返回分类管理页面','?ct=vcodeadmin');
             exit();
         }else{
-            ShowMsg('增加分类成功，将返回分类管理页面','?ct=verifycode');
+            ShowMsg('增加分类成功，将返回分类管理页面','?ct=vcodeadmin');
             exit();
         }
     }

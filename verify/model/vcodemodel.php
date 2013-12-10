@@ -23,7 +23,8 @@ class vcodemodel extends Model{
             $query = "SELECT * FROM `#@__verifycode` WHERE vcode='".$vcode."' and state=0;";
             $data = $this->dsql->GetOne($query);
             if($data){
-                $query = "UPDATE `#@__verifycode` SET state=1, mid='{$mid}', userid='{$userid}' WHERE vcode='{$vcode}';";
+                $ctime = date('Y-m-d H:i:s',time());
+                $query = "UPDATE `#@__verifycode` SET state=1, mid='{$mid}', userid='{$userid}', gmt_update='{$ctime}' WHERE vcode='{$vcode}';";
                 $this->dsql->ExecuteNoneQuery($query);
                 $query = "INSERT INTO `#@__member_archives`(mid, arcid,vcode) VALUES('{$mid}','{$data['arcid']}','{$vcode}');";
                 $this->dsql->ExecuteNoneQuery($query);
